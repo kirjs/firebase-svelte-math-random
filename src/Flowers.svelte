@@ -14,10 +14,10 @@
             </header>
             <img alt = "flower" src={flower.url} />
             <div>
-                <label>Interval (sec)
+                Interval (sec)
                     {flower.interval}
 
-                </label>
+
                 <div>{flower.lastWatered}</div>
                 <div>{flower.nextWatering}</div>
                 <button on:click={waterFlower(flower.id, flower.interval)}>💦</button>

@@ -13,11 +13,14 @@ import {
     doc,
     getFirestore,
     onSnapshot, orderBy, query,
-    serverTimestamp,
+    serverTimestamp, setDoc,
     updateDoc, where
 } from "@firebase/firestore";
 import {getDownloadURL, getStorage, ref, uploadBytes} from "@firebase/storage";
 import {readable} from "svelte/store";
+
+import { getMessaging, getToken } from "firebase/messaging";
+
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -37,6 +40,7 @@ const firebaseConfig = {
 // Initialize Firebase
 initializeApp(firebaseConfig);
 const auth = getAuth();
+const messaging = getMessaging();
 
 export function login() {
     signInWithPopup(auth, new GoogleAuthProvider());
@@ -142,4 +146,21 @@ export function waterFlower(id, interval){
         lastWatered: Date.now(),
         nextWatering: Date.now() + interval * 1000,
     });
+}
+
+export function getMessagingToken(){
+    getToken(messaging, { vapidKey: 'BII9UnWY6pWOwGtA76ZSTTf5vWSPUGrPLL0TS6BC1h8WoihJfV1ttGDr1-CrmuIUBR8VX8RoumMpNaeAktemKUE' }).then((currentToken) => {
+        if (currentToken) {
+            setDoc(doc(firestore, `users/${auth.currentUser.uid}`), {currentToken});
+            console.log(currentToken);
+        } else {
+            // Show permission request UI
+            console.log('No registration token available. Request permission to generate one.');
+            // ...
+        }
+    }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+        // ...
+    });
+
 }

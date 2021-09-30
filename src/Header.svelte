@@ -1,9 +1,11 @@
 <script>
-    import {login, user, logout} from "./firebase";
+    import {login, user, logout, getMessagingToken} from "./firebase";
 </script>
 
 <header>
     <h1>❤️️ Flowers</h1>
+
+    <button on:click={getMessagingToken}>Subscribe to notifications</button>
     <div class="login">
         {#if $user}
             {$user?.displayName}
